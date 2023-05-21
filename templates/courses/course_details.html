@@ -1,0 +1,87 @@
+{% extends 'master.html' %}
+{% block title %}Course Details{% endblock title %}
+{% load static %}
+{% load discount_tag %}
+{% block content %}
+
+<div class="container-sm mt-5">
+  
+    <div class="course-title mb-5">
+        <h5>{{ course.name }}&mdash;</h5>
+    </div>
+
+    <div class="course-body">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="ratio ratio-16x9">
+                    <iframe src="https://www.youtube.com/embed/Rmbzcm_7yQU?autoplay=0" title="YouTube video" allowfullscreen></iframe>
+                  </div>
+                  
+            </div>
+            <div class="col-lg-5">
+                  <div class="course-list overflow-scroll p-5 border rounded" style="height: 550px">
+                    <div class="mb-4">
+                        <h5>Course videos&mdash;</h5>
+                    </div>
+                    <ol>{% enrolled request.user course as enrolled %}
+                        {% for video in videos %}
+                        {% if forloop.counter0 >= 2 and not enrolled %}
+                        <li><a style="pointer-events:none; opacity:0.6" href="{{ video.link }}">{{ video.name }}</a></li>
+                        {% else %}
+                        <li><a href="{{ video.link }}">{{ video.name }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        
+                    </ol>
+                    
+                  </div>
+            </div>
+        </div>
+
+        {% comment %} course about {% endcomment %}
+        <div class="course-about mt-4">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="about rounded border p-3">
+                        <div class="mb-3">
+                            <h5>About Course&mdash;</h5>
+                        </div>
+                        <div class="about-body d-flex justify-content-start gap-4">
+                            <p class="p-2 border rounded">Student enrolled &ensp;&ensp;<span class="badge bg-primary">25</span></p>
+                            <p class="p-2 border rounded">Course videos &ensp;&ensp;<span class="badge bg-primary">{{ videos | length }}</span></p>
+                            <p class="p-2 border rounded">Total length &ensp;&ensp;<span class="badge bg-primary">{{ course.length }}</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="learn mt-4 rounded border p-3">
+                        <div class="mb-3">
+                            <h5>What we will learn in this Course&mdash;</h5>
+                        </div>
+                        <ol>
+                            {% for learn in learns %}
+                            <li>{{ learn.name }}</li>
+                            {% endfor %}
+                            
+                        </ol>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="requirments rounded border p-3">
+                        <div class="mb-3">
+                            <h5>Pre-requirments&mdash;</h5>
+                        </div>
+                        <ol>
+                            {% for requirement in requirements %}
+                            <li>{{ requirement.name }}</li>
+                            {% endfor %}
+                            
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+</div>
+
+{% endblock %}

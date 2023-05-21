@@ -1,0 +1,89 @@
+{% extends 'master.html' %}
+{% block title %}Courses{% endblock title %}
+{% load static %}
+{% load discount_tag %}
+{% block content %}
+
+<div class="container-sm mt-5">
+  <div class="d-flex justify-content-center">
+    
+    <form class="d-flex" method="GET">
+      <input class="border border-secondary rounded-end rounded-pill p-2 ps-3" name="search" type="text" placeholder="Search">
+      <button class="border border-secondary border-start-0 rounded-start rounded-pill ps-4 pe-4" type="submit"><i class="fas fa-search"></i></button>
+    </form>
+  </div>
+
+  {% comment %} Course card {% endcomment %}
+  <div class="courses mt-5">
+    <div class="course-category mb-3">
+      <h5>Courses&mdash;</h5>
+      
+    </div>
+    <div class="card-contaiiner d-flex justify-content-md-center flex-wrap">
+      
+      {% if object_list %}
+
+      {% for course in object_list %}
+
+      {% enrolled request.user course as enrolled %}
+          
+      {% if enrolled %}
+
+      <div class="card m-3" style="width: 18rem;">
+        <img src="/media/{{ course.thumbnail }}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ course.name }}</h5>        
+        </div>
+  
+        <div class="card-body mt-0 pt-0">
+          <div class="d-flex justify-content-between">
+            <span style="font-weight: 500;">Enrolled <i class="fa-solid fa-circle-check fa-sm" style="color: #118d1f;"></i></span>
+            <a href="{% url 'course_details' course.id %}" class="card-link link-offset-2 link-underline link-underline-opacity-0">Start now</a>
+          </div>
+        </div>
+      </div>
+      
+      {% else %}
+
+      {% comment %} Card {% endcomment %}
+      <div class="card m-3" style="width: 18rem;">
+        <img src="/media/{{ course.thumbnail }}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ course.name }}</h5>  
+              
+        </div>
+  
+        <div class="card-body mt-0 pt-0">
+          <div class="d-flex justify-content-between">
+            <p><span class="text-decoration-line-through">&#2547;{{ course.price }}</span>&ensp;&ensp;<span><b class="fs-5 fw-bold">&#2547;</b>{% discount_price course.price course.discount %}</span></p>
+            <p>Save {{ course.discount }}%</p>
+          </div>
+  
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'checkout' course.id %}" class="card-link link-offset-2 link-underline link-underline-opacity-0">Enroll now</a>
+            <a href="{% url 'course_details' course.id %}" class="card-link link-offset-2 link-underline link-underline-opacity-0">See details</a>
+          </div>
+        </div>
+      </div>
+
+
+      {% endif %}
+
+      
+
+      {% endfor %}
+      
+      {% else %}
+
+      <h4 class="text-danger">No courses found</h4>
+
+      {% endif %}
+
+    </div>
+
+  </div>
+  {% comment %} Course card {% endcomment %}
+  
+</div>
+
+{% endblock %}
